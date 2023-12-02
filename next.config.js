@@ -6,7 +6,7 @@ module.exports = {
       unoptimized: true,
     },
     swcMinify: true,
-    output: 'export',
+
     trailingSlash: true,
   }
   
