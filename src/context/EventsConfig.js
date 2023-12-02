@@ -16,6 +16,25 @@ export const EventProvider = ({ children }) => {
       if (data.success) {
         
         setRidesAavailableData(data.rides);
+        let request = [];
+        console.log(ridesAvaailableData)
+       await data.rides.map(async (item) => {
+              if (item.userid == user.id) {
+                  console.log(item.userid, user.id);
+                  const data = await AxiosGet(
+                      `/api/v1/users/rides/${item.id}/requests`,
+                      session.token
+                  );
+                  console.log(data.success, "fetchd requedst");
+                  if (data.success) {
+                      request.push(data.rides);
+                      console.log(data.rides);
+                  }
+                  else {
+                  }
+              }
+          });
+        setRideRequests(request);
       }
     };
 
@@ -29,32 +48,7 @@ export const EventProvider = ({ children }) => {
       setRidesLoading(false);
     }
   }, [user, session]);
-  useEffect(()=>{
-    const getRideRequests = async() => {
-      let request = [];
-      console.log(ridesAvaailableData)
-      ridesAvaailableData.map(async (item) => {
-            if (item.userid == user.id) {
-                console.log(item.userid, user.id);
-                const data = await AxiosGet(
-                    `/api/v1/users/rides/${item.id}/requests`,
-                    session.token
-                );
-                console.log(data.success, "fetchd requedst");
-                if (data.success) {
-                    request.push(data.rides);
-                    console.log(data.rides);
-                }
-                else {
-                }
-            }
-        });
-      setRideRequests(request);
-      if(ridesAvaailableData){
-        getRideRequests();
-      }
-    };
-  },[ridesAvaailableData,user,session])
+
   const updateRideRequest = async (rideid, requestid, decision) => {
     const data = await AxiosPost(
       `/api/v1/users/rides/${rideid}/requests/${requestid}`,
